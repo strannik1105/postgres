@@ -30,6 +30,7 @@ ALTER TYPE <replaceable class="parameter">name</replaceable> RENAME ATTRIBUTE <r
 ALTER TYPE <replaceable class="parameter">name</replaceable> <replaceable class="parameter">action</replaceable> [, ... ]
 ALTER TYPE <replaceable class="parameter">name</replaceable> ADD VALUE [ IF NOT EXISTS ] <replaceable class="parameter">new_enum_value</replaceable> [ { BEFORE | AFTER } <replaceable class="parameter">neighbor_enum_value</replaceable> ]
 ALTER TYPE <replaceable class="parameter">name</replaceable> RENAME VALUE <replaceable class="parameter">existing_enum_value</replaceable> TO <replaceable class="parameter">new_enum_value</replaceable>
+ALTER TYPE <replaceable class="parameter">name</replaceable> DROP VALUE <replaceable class="parameter">existing_enum_value</replaceable>
 ALTER TYPE <replaceable class="parameter">name</replaceable> SET ( <replaceable class="parameter">property</replaceable> = <replaceable class="parameter">value</replaceable> [, ... ] )
 
 <phrase>where <replaceable class="parameter">action</replaceable> is one of:</phrase>
@@ -145,6 +146,15 @@ ALTER TYPE <replaceable class="parameter">name</replaceable> SET ( <replaceable 
      </para>
     </listitem>
    </varlistentry>
+   
+   <varlistentry>
+       <term><literal>DROP VALUE</literal></term>
+       <listitem>
+        <para>
+         This form drops a value of an enum type.
+        </para>
+       </listitem>
+      </varlistentry>
 
    <varlistentry>
     <term>
@@ -460,6 +470,13 @@ ALTER TYPE colors ADD VALUE 'orange' AFTER 'red';
    To rename an enum value:
 <programlisting>
 ALTER TYPE colors RENAME VALUE 'purple' TO 'mauve';
+</programlisting>
+  </para>
+  
+  <para>
+   To drop an enum value:
+<programlisting>
+ALTER TYPE colors DROP VALUE 'red';
 </programlisting>
   </para>
 

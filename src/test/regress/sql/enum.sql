@@ -276,6 +276,20 @@ ALTER TYPE rainbow RENAME VALUE 'red' TO 'crimson';
 -- check that renaming to an existent value fails
 ALTER TYPE rainbow RENAME VALUE 'blue' TO 'green';
 
+-- check dropping a value
+ALTER TYPE rainbow DROP VALUE 'purple';
+ALTER TYPE rainbow DROP VALUE 'blue';
+ALTER TYPE rainbow DROP VALUE 'green';
+ALTER TYPE rainbow DROP VALUE 'yellow';
+ALTER TYPE rainbow DROP VALUE 'orange';
+ALTER TYPE rainbow DROP VALUE 'crimson';
+SELECT enum_range(NULL::rainbow);
+
+ALTER TYPE rainbow DROP VALUE 'purple';
+
+ALTER TYPE rainbow ADD VALUE 'purple';
+SELECT enum_range(NULL::rainbow);
+
 --
 -- check transactional behaviour of ALTER TYPE ... ADD VALUE
 --

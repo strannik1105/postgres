@@ -605,6 +605,28 @@ ERROR:  "red" is not an existing enum label
 -- check that renaming to an existent value fails
 ALTER TYPE rainbow RENAME VALUE 'blue' TO 'green';
 ERROR:  enum label "green" already exists
+-- check dropping a value
+ALTER TYPE rainbow DROP VALUE 'purple';
+ALTER TYPE rainbow DROP VALUE 'blue';
+ALTER TYPE rainbow DROP VALUE 'green';
+ALTER TYPE rainbow DROP VALUE 'yellow';
+ALTER TYPE rainbow DROP VALUE 'orange';
+ALTER TYPE rainbow DROP VALUE 'crimson';
+SELECT enum_range(NULL::rainbow);
+ enum_range 
+------------
+ {}
+(1 row)
+
+ALTER TYPE rainbow DROP VALUE 'purple';
+ERROR:  "purple" is not an existing enum label
+ALTER TYPE rainbow ADD VALUE 'purple';
+SELECT enum_range(NULL::rainbow);
+ enum_range 
+------------
+ {purple}
+(1 row)
+
 --
 -- check transactional behaviour of ALTER TYPE ... ADD VALUE
 --

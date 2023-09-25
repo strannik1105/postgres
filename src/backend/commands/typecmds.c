@@ -1280,8 +1280,16 @@ AlterEnum(AlterEnumStmt *stmt)
 
 	if (stmt->oldVal)
 	{
-		/* Rename an existing label */
-		RenameEnumLabel(enum_type_oid, stmt->oldVal, stmt->newVal);
+        if(stmt->newVal)
+        {
+            /* Rename an existing label */
+            RenameEnumLabel(enum_type_oid, stmt->oldVal, stmt->newVal);
+        }
+        else
+        {
+            /* Delete an existing label */
+            DropEnumLabel(enum_type_oid, stmt->oldVal);
+        }
 	}
 	else
 	{

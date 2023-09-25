@@ -57,6 +57,7 @@ extern void AddEnumLabel(Oid enumTypeOid, const char *newVal,
 						 bool skipIfExists);
 extern void RenameEnumLabel(Oid enumTypeOid,
 							const char *oldVal, const char *newVal);
+extern void DropEnumLabel(Oid enumTypeOid, const char *oldVal);
 extern bool EnumUncommitted(Oid enum_id);
 extern Size EstimateUncommittedEnumsSpace(void);
 extern void SerializeUncommittedEnums(void *space, Size size);

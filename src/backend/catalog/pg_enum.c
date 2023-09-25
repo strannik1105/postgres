@@ -612,6 +612,62 @@ RenameEnumLabel(Oid enumTypeOid,
 	table_close(pg_enum, RowExclusiveLock);
 }
 
+void
+DropEnumLabel(Oid enumTypeOid, const char *oldVal)
+{
+    Relation	pg_enum;
+    HeapTuple	enum_tup;
+    Form_pg_enum en;
+    CatCList   *list;
+    int			nelems;
+    HeapTuple	old_tup;
+    int			i;
+
+
+    /*
+     * Acquire a lock on the enum type, which we won't release until commit.
+     * This ensures that two backends aren't concurrently modifying the same
+     * enum type.  Since we are not changing the type's sort order, this is
+     * probably not really necessary, but there seems no reason not to take
+     * the lock to be sure.
+     */
+    LockDatabaseObject(TypeRelationId, enumTypeOid, 0, ExclusiveLock);
+
+    pg_enum = table_open(EnumRelationId, RowExclusiveLock);
+
+    /* Get the list of existing members of the enum */
+    list = SearchSysCacheList1(ENUMTYPOIDNAME,
+                               ObjectIdGetDatum(enumTypeOid));
+    nelems = list->n_members;
+
+    /*
+     * Locate the element to rename and check if the new label is already in
+     * use.  (The unique index on pg_enum would catch that anyway, but we
+     * prefer a friendlier error message.)
+     */
+    old_tup = NULL;
+    for (i = 0; i < nelems; i++)
+    {
+        enum_tup = &(list->members[i]->tuple);
+        en = (Form_pg_enum) GETSTRUCT(enum_tup);
+        if (strcmp(NameStr(en->enumlabel), oldVal) == 0)
+        {
+            old_tup = enum_tup;
+        }
+    }
+
+    ReleaseCatCacheList(list);
+
+    if (!old_tup)
+        ereport(ERROR,
+                (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
+                        errmsg("\"%s\" is not an existing enum label",
+                               oldVal)));
+
+    CatalogTupleDelete(pg_enum, &old_tup->t_self);
+    table_close(pg_enum, RowExclusiveLock);
+}
+
 
 /*
  * Test if the given enum value is in the table of uncommitted enums.

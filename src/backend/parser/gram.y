@@ -6359,7 +6359,7 @@ AlterEnumStmt:
 		ALTER TYPE_P any_name ADD_P VALUE_P opt_if_not_exists Sconst
 			{
 				AlterEnumStmt *n = makeNode(AlterEnumStmt);
-
+				
 				n->typeName = $3;
 				n->oldVal = NULL;
 				n->newVal = $7;
@@ -6404,6 +6404,18 @@ AlterEnumStmt:
 				n->skipIfNewValExists = false;
 				$$ = (Node *) n;
 			}
+		 | ALTER TYPE_P any_name DROP VALUE_P Sconst
+            {
+                AlterEnumStmt *n = makeNode(AlterEnumStmt);
+
+                n->typeName = $3;
+                n->oldVal = $6;
+                n->newVal = NULL;
+                n->newValNeighbor = NULL;
+                n->newValIsAfter = false;
+                n->skipIfNewValExists = false;
+                $$ = (Node *) n;
+            }
 		 ;
 
 opt_if_not_exists: IF_P NOT EXISTS              { $$ = true; }

@@ -3294,10 +3294,10 @@ SELECT person.name, holidays.num_weeks FROM person, holidays
 
     <para>
      Although enum types are primarily intended for static sets of values,
-     there is support for adding new values to an existing enum type, and for
-     renaming values (see <xref linkend="sql-altertype"/>).  Existing values
-     cannot be removed from an enum type, nor can the sort ordering of such
-     values be changed, short of dropping and re-creating the enum type.
+     there is support for adding new values to an existing enum type, and
+     also for dropping and renaming values 
+     (see <xref linkend="sql-altertype"/>). the sorting order of such values
+     cannot be changed, except for deleting and re-creating the enum type.
     </para>
 
     <para>
